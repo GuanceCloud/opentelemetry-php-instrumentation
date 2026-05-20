@@ -2,8 +2,12 @@ name: Build, test, release
 
 on:
   push:
+    branches: [ gtrace ]
+    tags:
+      - '*'
   pull_request:
-    branches: [ main ]
+    branches: [ gtrace ]
+  workflow_dispatch:
 
 permissions:
   contents: read
@@ -70,18 +74,28 @@ jobs:
       image: php:8.5-cli@sha256:f13d143eb7a29dd41758a6473f297ee0aaf18b10303818c2caa59c021165e9fe
     steps:
       - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
+      - name: Install zip
+        run: |
+          apt-get update
+          apt-get install -y zip
+          rm -rf /var/lib/apt/lists/*
 
       - name: Package and copy
         run: |
-          mkdir binaries
+          mkdir -p binaries artifacts/opentelemetry-pecl
           pear package-validate
           pear package
           cp opentelemetry-*.tgz binaries/
+          cp opentelemetry-*.tgz artifacts/opentelemetry-pecl/
+      - name: Create PECL zip
+        run: |
+          cd artifacts
+          zip -jr opentelemetry-pecl.zip opentelemetry-pecl
       - name: Upload artifacts
         uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4.6.2
         with:
           name: opentelemetry-pecl
-          path: ext/binaries/*.tgz
+          path: ext/artifacts/opentelemetry-pecl.zip
           if-no-files-found: error
 
   windows:
@@ -125,8 +139,12 @@ jobs:
             *) echo "Unknown MSVC version: $VisualStudioVersion"; exit 1;;
           esac
           echo "Detected Compiler: $COMPILER"
-          SAFE_REF_NAME="${GITHUB_REF_NAME//\//-}"
-          BUILD_NAME="php_opentelemetry-${SAFE_REF_NAME}-${{matrix.php}}-${{matrix.ts}}-$COMPILER-x86_64"
+          if [[ "${GITHUB_REF_TYPE}" == "tag" ]]; then
+            RELEASE_VERSION="${GITHUB_REF_NAME#v}"
+          else
+            RELEASE_VERSION="${GITHUB_SHA::7}"
+          fi
+          BUILD_NAME="php_opentelemetry-${RELEASE_VERSION}-${{matrix.php}}-${{matrix.ts}}-$COMPILER-x86_64"
           echo "Build Name: $BUILD_NAME"
           echo "BUILD_NAME=$BUILD_NAME" >> $GITHUB_ENV
 
@@ -135,6 +153,9 @@ jobs:
           md binaries\${{env.BUILD_NAME}}
           $file = Get-ChildItem -Path x64 -Recurse -Filter php_opentelemetry.dll
           Copy-Item -Path $file.FullName -Destination "binaries\${{env.BUILD_NAME}}\${{env.BUILD_NAME}}.dll"
+      - name: Zip binaries
+        run: |
+          Compress-Archive -Path "binaries\${{env.BUILD_NAME}}\*" -DestinationPath "binaries\${{env.BUILD_NAME}}.zip" -Force
       - name: Find
         run: |
           Get-ChildItem -Path binaries -Recurse -Force | ForEach-Object { $_.FullName }
@@ -142,13 +163,13 @@ jobs:
         uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4.6.2
         with:
           name: ${{env.BUILD_NAME}}
-          path: ext\binaries\${{env.BUILD_NAME}}\${{env.BUILD_NAME}}.dll
+          path: ext\binaries\${{env.BUILD_NAME}}.zip
           if-no-files-found: error
 
   release-if-tag:
     runs-on: ubuntu-latest
     if: startsWith(github.ref, 'refs/tags/')
-    needs: [linux, pecl-package, windows]
+    needs: [linux, macos, pecl-package, windows]
     permissions:
       contents: write # required for creating releases
     continue-on-error: false
@@ -159,13 +180,20 @@ jobs:
         uses: actions/download-artifact@634f93cb2916e3fdff6788551b99b062d0335ce0 # v5
         with:
           path: ext/artifacts
-      - name: zip
+      - name: Collect assets
         run: |
-          cd artifacts
-          find . -maxdepth 1 -type d -exec zip -jr {}.zip {} \;
+          mkdir -p ext/final-assets
+          find ext/artifacts -type f -name '*.zip' -exec cp {} ext/final-assets/ \;
+          ls -lah ext/final-assets
+      - name: Generate checksums
+        run: |
+          cd ext/final-assets
+          sha256sum *.zip > SHA256SUMS
       - name: Release
         uses: softprops/action-gh-release@153bb8e04406b158c6c84fc1615b65b24149a1fe # v2.6.1
         with:
           generate_release_notes: true
           draft: true
-          files: "ext/artifacts/*.zip"
+          files: |
+            ext/final-assets/*.zip
+            ext/final-assets/SHA256SUMS
