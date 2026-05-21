@@ -182,12 +182,12 @@ jobs:
           path: ext/artifacts
       - name: Collect assets
         run: |
-          mkdir -p ext/final-assets
-          find ext/artifacts -type f -name '*.zip' -exec cp {} ext/final-assets/ \;
-          ls -lah ext/final-assets
+          mkdir -p final-assets
+          find artifacts -type f -name '*.zip' -exec cp {} final-assets/ \;
+          ls -lah final-assets
       - name: Generate checksums
         run: |
-          cd ext/final-assets
+          cd final-assets
           sha256sum *.zip > SHA256SUMS
       - name: Release
         uses: softprops/action-gh-release@153bb8e04406b158c6c84fc1615b65b24149a1fe # v2.6.1
