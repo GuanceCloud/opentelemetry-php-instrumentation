@@ -17,7 +17,17 @@ defaults:
     working-directory: ext
 
 jobs:
+  validate-metadata:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
+      - name: Validate extension version metadata
+        run: |
+          python3 .github/scripts/validate-ext-version.py
+
   linux:
+    needs: validate-metadata
     runs-on: ubuntu-latest
     strategy:
       fail-fast: false
@@ -42,6 +52,7 @@ jobs:
         run: make test TESTS=--show-diff
 
   macos:
+    needs: validate-metadata
     runs-on: macos-latest
     strategy:
       fail-fast: false
@@ -69,6 +80,7 @@ jobs:
         run: make test TESTS=--show-diff
 
   pecl-package:
+    needs: validate-metadata
     runs-on: ubuntu-latest
     container:
       image: php:8.5-cli@sha256:f13d143eb7a29dd41758a6473f297ee0aaf18b10303818c2caa59c021165e9fe
@@ -99,6 +111,7 @@ jobs:
           if-no-files-found: error
 
   windows:
+    needs: validate-metadata
     runs-on: windows-2025
     continue-on-error: false
     strategy:
@@ -169,7 +182,7 @@ jobs:
   release-if-tag:
     runs-on: ubuntu-latest
     if: startsWith(github.ref, 'refs/tags/')
-    needs: [linux, macos, pecl-package, windows]
+    needs: [validate-metadata, linux, macos, pecl-package, windows]
     permissions:
       contents: write # required for creating releases
     continue-on-error: false
