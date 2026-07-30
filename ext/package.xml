@@ -2,8 +2,8 @@
 <package xmlns="http://pear.php.net/dtd/package-2.0" xmlns:tasks="http://pear.php.net/dtd/tasks-1.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" packagerversion="1.9.5" version="2.0" xsi:schemaLocation="http://pear.php.net/dtd/tasks-1.0 http://pear.php.net/dtd/tasks-1.0.xsd http://pear.php.net/dtd/package-2.0 http://pear.php.net/dtd/package-2.0.xsd">
   <name>opentelemetry</name>
   <channel>pecl.php.net</channel>
-  <summary>OpenTelemetry auto-instrumentation support extension</summary>
-  <description>https://github.com/open-telemetry/opentelemetry-php-instrumentation</description>
+  <summary>GuanceCloud gtrace fork of the OpenTelemetry auto-instrumentation extension</summary>
+  <description>https://github.com/GuanceCloud/opentelemetry-php-instrumentation</description>
   <lead>
     <name>Brett McBride</name>
     <user>brettmc</user>
@@ -16,18 +16,18 @@
     <email>pdelewski@example.com</email>
     <active>yes</active>
   </lead>
-  <date>2026-05-20</date>
-  <time>17:29:19</time>
+  <date>2026-07-30</date>
+  <time>15:33:31</time>
   <version>
-    <release>1.3.1dev</release>
+    <release>1.3.2</release>
     <api>1.0</api>
   </version>
   <stability>
-    <release>devel</release>
+    <release>stable</release>
     <api>stable</api>
   </stability>
   <license uri="https://opensource.org/license/apache-2-0/" filesource="LICENSE">Apache 2.0</license>
-  <notes>See https://github.com/GuanceCloud/opentelemetry-php-instrumentation/releases/tag/1.3.1-gtrace</notes>
+  <notes>GuanceCloud gtrace distribution. See https://github.com/GuanceCloud/opentelemetry-php-instrumentation/releases/tag/1.3.2-gtrace</notes>
   <contents>
     <dir baseinstalldir="/" name="/">
       <file baseinstalldir="/" name=".clang-format" role="src"/>

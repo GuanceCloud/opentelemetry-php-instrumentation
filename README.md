@@ -1,13 +1,20 @@
 # OpenTelemetry auto-instrumentation extension
 
-[![Build and test](https://github.com/open-telemetry/opentelemetry-php-instrumentation/actions/workflows/build.yml/badge.svg)](https://github.com/open-telemetry/opentelemetry-php-instrumentation/actions/workflows/build.yml)
+This repository is the `GuanceCloud` fork of the upstream OpenTelemetry PHP instrumentation extension.
+
+[![Build and test](https://github.com/GuanceCloud/opentelemetry-php-instrumentation/actions/workflows/build.yml/badge.svg)](https://github.com/GuanceCloud/opentelemetry-php-instrumentation/actions/workflows/build.yml)
 
 ## Current Project Status
-For more information, please consult the documentation of the main [OpenTelemetry PHP project](https://github.com/open-telemetry/opentelemetry-php).
+This fork tracks the upstream [OpenTelemetry PHP instrumentation project](https://github.com/open-telemetry/opentelemetry-php-instrumentation)
+for the extension codebase, while publishing GuanceCloud-specific `gtrace` release assets.
+
+For the PHP SDK, exporters and auto-instrumentation Composer packages, still refer to the main
+[OpenTelemetry PHP project](https://github.com/open-telemetry/opentelemetry-php).
 
 ## Issues
 
-Issues have been disabled for this repo in order to help maintain consistency between this repo and the main [OpenTelemetry PHP project](https://github.com/open-telemetry/opentelemetry-php) repo. If you have an issue you'd like to raise about this issue, please use the [OpenTelemetry PHP Issue section](https://github.com/open-telemetry/opentelemetry-php/issues/new/choose). Please prefix the title of the issue with [opentelemetry-php-instrumentation].
+Use the GuanceCloud repository for fork-specific packaging, release or distribution issues.
+For upstream extension behavior or SDK issues, refer to the main [OpenTelemetry PHP project](https://github.com/open-telemetry/opentelemetry-php).
 
 ## Description
 This is a PHP extension for OpenTelemetry, to enable auto-instrumentation.
@@ -26,9 +33,36 @@ In PHP 8.2+, internal/built-in PHP functions can also be observed.
 
 ## Installation
 
-The extension can be installed in all of the usual ways:
+For the GuanceCloud fork, prefer the release assets published from this repository:
+
+- Linux: prebuilt `php_opentelemetry-<release>-<php>-nts-linux-x86_64.tar.gz` packages
+- Windows: prebuilt `php_opentelemetry-<release>-<php>-<ts|nts>-vs17-x86_64.zip` packages
+- Source package: `opentelemetry-<release>.tgz` and `opentelemetry-pecl-<release>.zip`
+
+Only use distro packages or `pecl install opentelemetry` when you explicitly want the upstream extension instead of the GuanceCloud `gtrace` distribution.
+
+## GuanceCloud fork notes
+
+If you are using the `GuanceCloud/opentelemetry-php-instrumentation` fork rather than the upstream repository,
+there is an important distinction:
+
+- the PHP extension may come from GuanceCloud release assets
+- the PHP SDK / exporter / auto-instrumentation packages are still installed from the upstream `open-telemetry/*` Composer packages
+
+Also note that `pecl install opentelemetry` and distro packages such as `php-pecl-opentelemetry` generally install
+the upstream extension, not the GuanceCloud `gtrace` fork build.
+
+If you need the GuanceCloud fork build, prefer:
+
+- Windows: release zip assets such as `php_opentelemetry-1.3.2-gtrace-8.2-nts-vs17-x86_64.zip`
+- Linux: release tarballs such as `php_opentelemetry-1.3.2-gtrace-8.2-nts-linux-x86_64.tar.gz`
+
+The current fork release workflow produces Linux prebuilt tarballs, Windows binary zip assets and a PECL-compatible
+source package.
 
 ### pecl
+
+This installs the upstream extension from the PECL channel, not the GuanceCloud fork build:
 
 ```shell
 pecl install opentelemetry
@@ -39,7 +73,7 @@ pecl install opentelemetry
 If you are using the [official PHP docker images](https://hub.docker.com/_/php) then you can use
 [php-extension-installer](https://github.com/mlocati/docker-php-extension-installer)
 
-From github:
+From upstream github:
 ```shell
 install-php-extensions opentelemetry-php/ext-opentelemetry@main
 ```
@@ -49,9 +83,11 @@ Via pecl/pickle:
 install-php-extensions opentelemetry[-beta|-stable|-latest]
 ```
 
+For the GuanceCloud fork, prefer this repository's release assets instead of the upstream package sources.
+
 ### Windows
 
-Pre-built windows binaries are available from the [releases page](https://github.com/open-telemetry/opentelemetry-php-instrumentation/releases)
+Pre-built Windows binaries are available from the [GuanceCloud releases page](https://github.com/GuanceCloud/opentelemetry-php-instrumentation/releases)
 
 See https://wiki.php.net/internals/windows/stepbystepbuild_sdk_2#building_pecl_extensions_with_phpize
 for generic advice on building from source under Windows.
@@ -61,6 +97,11 @@ for generic advice on building from source under Windows.
 ```shell
 php --ri  opentelemetry
 ```
+
+On the GuanceCloud fork, the output should include both:
+
+- `extension version => 1.3.2`
+- `extension distribution => GuanceCloud gtrace`
 
 ## Known issues
 

@@ -165,6 +165,8 @@ PHP_MINFO_FUNCTION(opentelemetry) {
                              OTEL_G(disabled) ? "disabled (conflict)"
                                               : "enabled");
     php_info_print_table_row(2, "extension version", PHP_OPENTELEMETRY_VERSION);
+    php_info_print_table_row(2, "extension distribution",
+                             PHP_OPENTELEMETRY_DISTRIBUTION);
     php_info_print_table_end();
     DISPLAY_INI_ENTRIES();
 }
