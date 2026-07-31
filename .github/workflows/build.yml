@@ -191,11 +191,11 @@ jobs:
       - name: Get Compiler Version + Build Name
         shell: bash
         run: |
-          case "$VisualStudioVersion" in
-            16.*) COMPILER="vs16";;
-            17.*) COMPILER="vs17";;
-            *) echo "Unknown MSVC version: $VisualStudioVersion"; exit 1;;
-          esac
+          COMPILER="${{ steps.setup-php-sdk.outputs.toolset }}"
+          if [[ -z "$COMPILER" ]]; then
+            echo "setup-php-sdk did not provide a toolset output"
+            exit 1
+          fi
           echo "Detected Compiler: $COMPILER"
           if [[ "${GITHUB_REF_TYPE}" == "tag" ]]; then
             RELEASE_VERSION="${GITHUB_REF_NAME#v}"
