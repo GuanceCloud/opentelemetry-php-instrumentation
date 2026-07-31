@@ -157,7 +157,7 @@ jobs:
 
   windows:
     needs: validate-metadata
-    runs-on: windows-2025
+    runs-on: windows-2022
     continue-on-error: false
     strategy:
       fail-fast: false
