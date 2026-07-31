@@ -54,8 +54,8 @@ the upstream extension, not the GuanceCloud `gtrace` fork build.
 
 If you need the GuanceCloud fork build, prefer:
 
-- Windows: release zip assets such as `php_opentelemetry-1.3.3-gtrace-8.2-nts-vs17-x86_64.zip`
-- Linux: release tarballs such as `php_opentelemetry-1.3.3-gtrace-8.2-nts-linux-x86_64.tar.gz`
+- Windows: release zip assets such as `php_opentelemetry-1.3.4-gtrace-8.2-nts-vs17-x86_64.zip`
+- Linux: release tarballs such as `php_opentelemetry-1.3.4-gtrace-8.2-nts-linux-x86_64.tar.gz`
 
 The current fork release workflow produces Linux prebuilt tarballs, Windows binary zip assets and a PECL-compatible
 source package.
@@ -100,7 +100,7 @@ php --ri  opentelemetry
 
 On the GuanceCloud fork, the output should include both:
 
-- `extension version => 1.3.3`
+- `extension version => 1.3.4`
 - `extension distribution => GuanceCloud gtrace`
 
 ## Known issues

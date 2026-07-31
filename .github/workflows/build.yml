@@ -246,7 +246,7 @@ jobs:
       - name: Generate asset manifest
         shell: bash
         run: |
-          cat > ext/final-assets/INSTALL.md <<'EOF'
+          cat > final-assets/INSTALL.md <<'EOF'
           # GuanceCloud OpenTelemetry PHP Instrumentation Assets
 
           This release contains GuanceCloud `gtrace` distribution assets for the PHP OpenTelemetry extension.
@@ -268,10 +268,10 @@ jobs:
 
           Example release names:
 
-          - `php_opentelemetry-1.3.3-gtrace-8.2-nts-linux-x86_64.tar.gz`
-          - `php_opentelemetry-1.3.3-gtrace-8.2-nts-vs17-x86_64.zip`
-          - `opentelemetry-1.3.3-gtrace.tgz`
-          - `opentelemetry-pecl-1.3.3-gtrace.zip`
+          - `php_opentelemetry-1.3.4-gtrace-8.2-nts-linux-x86_64.tar.gz`
+          - `php_opentelemetry-1.3.4-gtrace-8.2-nts-vs17-x86_64.zip`
+          - `opentelemetry-1.3.4-gtrace.tgz`
+          - `opentelemetry-pecl-1.3.4-gtrace.zip`
 
           ## Verification
 
@@ -281,7 +281,7 @@ jobs:
 
           Expected output should include:
 
-          - `extension version => 1.3.3`
+          - `extension version => 1.3.4`
           - `extension distribution => GuanceCloud gtrace`
           EOF
       - name: Generate checksums
